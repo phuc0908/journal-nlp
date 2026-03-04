@@ -56,16 +56,18 @@ mongoose.connect(mongoURI)
 
 async function seedDefaultUser() {
     try {
-        // Xóa admin cũ để đảm bảo reset hoàn toàn dữ liệu lỗi thời
-        await User.deleteOne({ username: 'admin' });
-
-        const admin = new User({
-            username: 'admin',
-            password: 'password123',
-            nickname: 'Cố vấn AI'
-        });
-        await admin.save();
-        console.log('👤 Đã reset tài khoản mặc định: admin / password123');
+        const existing = await User.findOne({ username: 'admin' });
+        if (!existing) {
+            const admin = new User({
+                username: 'admin',
+                password: 'password123',
+                nickname: 'Cố vấn AI'
+            });
+            await admin.save();
+            console.log('👤 Đã tạo tài khoản mặc định: admin / password123');
+        } else {
+            console.log('👤 Tài khoản admin đã tồn tại, bỏ qua seed.');
+        }
     } catch (error) {
         console.error('Lỗi khi seed user:', error);
     }

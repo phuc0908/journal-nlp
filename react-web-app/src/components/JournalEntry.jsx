@@ -5,6 +5,7 @@ const JournalEntry = ({ t, user }) => {
     const [activeMoodIdx, setActiveMoodIdx] = useState(2); // Mặc định là 'Ổn'
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
+    const [savedTime, setSavedTime] = useState(null);
 
     const moodData = [
         { emoji: '😢', label: t.moods[0] },
@@ -36,6 +37,9 @@ const JournalEntry = ({ t, user }) => {
 
             if (!response.ok) throw new Error('Không thể lưu nhật ký');
 
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+            setSavedTime(timeStr);
             setMessage({ type: 'success', text: 'Đã lưu nhật ký thành công!' });
             setContent('');
             setTimeout(() => setMessage({ type: '', text: '' }), 3000);
@@ -99,7 +103,9 @@ const JournalEntry = ({ t, user }) => {
                     </button>
                 </div>
                 <div className="flex items-center gap-4">
-                    <span className="text-xs text-slate-500">{loading ? 'Đang lưu...' : t.saveTime}</span>
+                    <span className="text-xs text-slate-500">
+                        {loading ? 'Đang lưu...' : savedTime ? `Đã lưu lúc ${savedTime}` : t.saveTime}
+                    </span>
                     <button
                         onClick={handleSave}
                         disabled={loading || !content.trim()}
