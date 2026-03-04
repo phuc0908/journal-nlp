@@ -22,13 +22,15 @@ const userSchema = new mongoose.Schema({
 });
 
 // Mã hóa mật khẩu trước khi lưu
-userSchema.pre('save', function (next) {
-    if (!this.isModified('password')) return next();
-    bcrypt.hash(this.password, 10, (err, hash) => {
-        if (err) return next(err);
-        this.password = hash;
-        next();
-    });
+userSchema.pre('save', async function () {
+    if (!this.isModified('password')) return;
+
+    try {
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, salt);
+    } catch (error) {
+        throw error;
+    }
 });
 
 // Phương thức kiểm tra mật khẩu
