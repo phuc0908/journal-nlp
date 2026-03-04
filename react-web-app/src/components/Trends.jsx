@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Trends = ({ t }) => {
+const Trends = ({ t, user }) => {
     return (
         <section className="max-w-6xl mx-auto w-full px-8 py-10 flex-1 overflow-y-auto">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-10">

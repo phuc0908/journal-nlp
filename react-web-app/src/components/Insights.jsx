@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Insights = ({ t }) => {
+const Insights = ({ t, user }) => {
     return (
         <aside className="w-80 border-l border-primary/10 bg-background-light dark:bg-background-dark p-6 hidden xl:block overflow-y-auto h-screen">
             <h3 className="font-bold mb-6 flex items-center gap-2">

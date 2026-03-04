@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const JournalEntry = ({ t }) => {
+const JournalEntry = ({ t, user }) => {
     const [content, setContent] = useState('');
     const [activeMoodIdx, setActiveMoodIdx] = useState(2); // Mặc định là 'Ổn'
     const [loading, setLoading] = useState(false);

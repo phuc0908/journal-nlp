@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Sidebar = ({ activeView, setActiveView, t }) => {
+const Sidebar = ({ activeView, setActiveView, t, user }) => {
     const navItems = [
         { id: 'journal', label: t.journal, icon: 'edit_note' },
         { id: 'overview', label: t.overview, icon: 'grid_view' },

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Overview = ({ t }) => {
+const Overview = ({ t, user }) => {
     const stats = [
         { label: t.stats.total, value: '148', icon: 'description', color: 'text-blue-500' },
         { label: t.stats.streak, value: '12', icon: 'local_fire_department', color: 'text-orange-500' },

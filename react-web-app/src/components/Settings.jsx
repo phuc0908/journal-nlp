@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Settings = ({ theme, setTheme, language, setLanguage, t, onLogout }) => {
+const Settings = ({ theme, setTheme, language, setLanguage, t, onLogout, user }) => {
     return (
         <section className="max-w-4xl mx-auto w-full px-8 py-10 flex-1 overflow-y-auto">
             <div className="space-y-10">
