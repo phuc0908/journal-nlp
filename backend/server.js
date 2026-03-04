@@ -95,7 +95,8 @@ app.post('/api/auth/login', async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({ message: 'Lỗi server', error });
+        console.error('❌ Lỗi Đăng nhập:', error);
+        res.status(500).json({ message: 'Lỗi server khi đăng nhập', error: error.message });
     }
 });
 
