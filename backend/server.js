@@ -36,21 +36,16 @@ mongoose.connect(mongoURI)
 
 async function seedDefaultUser() {
     try {
-        let admin = await User.findOne({ username: 'admin' });
-        if (!admin) {
-            admin = new User({
-                username: 'admin',
-                password: 'password123',
-                nickname: 'Cố vấn AI'
-            });
-            await admin.save();
-            console.log('👤 Đã tạo tài khoản mặc định: admin / password123');
-        } else {
-            // Hữu ích khi môi trường thay đổi hoặc cần reset mật khẩu admin
-            admin.password = 'password123';
-            await admin.save();
-            console.log('👤 Đã cập nhật/xác nhận mật khẩu tài khoản admin: password123');
-        }
+        // Xóa admin cũ để đảm bảo reset hoàn toàn dữ liệu lỗi thời
+        await User.deleteOne({ username: 'admin' });
+
+        const admin = new User({
+            username: 'admin',
+            password: 'password123',
+            nickname: 'Cố vấn AI'
+        });
+        await admin.save();
+        console.log('👤 Đã reset tài khoản mặc định: admin / password123');
     } catch (error) {
         console.error('Lỗi khi seed user:', error);
     }
@@ -71,26 +66,31 @@ app.post('/api/auth/register', async (req, res) => {
 
         res.status(201).json({ message: 'Đăng ký thành công' });
     } catch (error) {
-        res.status(500).json({ message: 'Lỗi server', error });
+        console.error('❌ Lỗi Đăng ký:', error);
+        res.status(500).json({ message: 'Lỗi server khi đăng ký', error: error.message });
     }
 });
 
 app.post('/api/auth/login', async (req, res) => {
     try {
         const { username, password } = req.body;
+        console.log(`🔑 Thử đăng nhập: ${username}`);
 
         const user = await User.findOne({ username });
         if (!user) {
+            console.log(`❌ Không tìm thấy user: ${username}`);
             return res.status(400).json({ message: 'Sai tên đăng nhập hoặc mật khẩu' });
         }
 
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
+            console.log(`❌ Mật khẩu không khớp cho user: ${username}`);
             return res.status(400).json({ message: 'Sai tên đăng nhập hoặc mật khẩu' });
         }
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'secret_key', { expiresIn: '1d' });
 
+        console.log(`✅ Đăng nhập thành công: ${username}`);
         res.json({
             message: 'Đăng nhập thành công',
             token,
