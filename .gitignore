@@ -1,0 +1,10 @@
+node_modules
+dist
+.env
+*.log
+.DS_Store
+
+# Ignored sub-folders (already have their own gitignore but good for safety)
+/backend/node_modules
+/react-web-app/node_modules
+/react-web-app/dist

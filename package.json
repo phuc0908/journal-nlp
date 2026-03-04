@@ -1,0 +1,17 @@
+{
+    "name": "ai-journal-fullstack",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "install:all": "npm install && cd backend && npm install && cd ../react-web-app && npm install",
+        "build:frontend": "cd react-web-app && npm run build",
+        "build": "npm run build:frontend",
+        "start": "cd backend && node server.js",
+        "dev:backend": "cd backend && node server.js",
+        "dev:frontend": "cd react-web-app && npm run dev",
+        "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\""
+    },
+    "devDependencies": {
+        "concurrently": "^8.2.2"
+    }
+}
