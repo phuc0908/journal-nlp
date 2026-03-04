@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Login = ({ t, setIsLoggedIn }) => {
+const Login = ({ t, setIsLoggedIn, setUser }) => {
     const [isRegister, setIsRegister] = useState(false);
     const [username, setUsername] = useState('');
     const [nickname, setNickname] = useState('');
@@ -40,7 +40,7 @@ const Login = ({ t, setIsLoggedIn }) => {
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('user', JSON.stringify(data.user));
                 localStorage.setItem('token', data.token);
-                if (setUser) setUser(data.user);
+                setUser(data.user);
                 setIsLoggedIn(true);
             }
         } catch (err) {
