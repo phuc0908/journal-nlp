@@ -1,10 +1,16 @@
 import React from 'react';
 
-const Header = ({ activeView, t }) => {
+const Header = ({ activeView, t, user }) => {
     const getHeaderContent = () => {
+        const nickname = user?.nickname || 'Người dùng';
         switch (activeView) {
             case 'journal':
-                return { title: t.journalTitle, subtitle: t.journalSubtitle };
+                return {
+                    title: t.journalTitle.includes('Minh Anh')
+                        ? t.journalTitle.replace('Minh Anh', nickname)
+                        : `${t.journalTitle}, ${nickname}`,
+                    subtitle: t.journalSubtitle
+                };
             case 'overview':
                 return { title: t.overviewTitle, subtitle: t.overviewSubtitle };
             case 'trends':

@@ -12,6 +12,7 @@ import { translations } from './translations';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true');
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
   const [activeView, setActiveView] = useState('journal');
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   const [language, setLanguage] = useState(localStorage.getItem('language') || 'vi');
@@ -33,23 +34,26 @@ function App() {
 
   const handleLogout = () => {
     localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
     setIsLoggedIn(false);
+    setUser(null);
   };
 
   if (!isLoggedIn) {
-    return <Login t={t.auth} setIsLoggedIn={setIsLoggedIn} />;
+    return <Login t={t.auth} setIsLoggedIn={setIsLoggedIn} setUser={setUser} />;
   }
 
   const renderContent = () => {
     switch (activeView) {
       case 'journal':
-        return <JournalEntry t={t.journal} />;
+        return <JournalEntry t={t.journal} user={user} />;
       case 'overview':
-        return <Overview t={t.overview} />;
+        return <Overview t={t.overview} user={user} />;
       case 'trends':
-        return <Trends t={t.trends} />;
+        return <Trends t={t.trends} user={user} />;
       case 'vault':
-        return <Vault t={t.vault} />;
+        return <Vault t={t.vault} user={user} />;
       case 'settings':
         return (
           <Settings
@@ -59,21 +63,22 @@ function App() {
             setLanguage={setLanguage}
             t={t.settings}
             onLogout={handleLogout}
+            user={user}
           />
         );
       default:
-        return <JournalEntry t={t.journal} />;
+        return <JournalEntry t={t.journal} user={user} />;
     }
   };
 
   return (
     <div className="flex h-screen overflow-hidden bg-background-light dark:bg-background-dark">
-      <Sidebar activeView={activeView} setActiveView={setActiveView} t={t.sidebar} />
+      <Sidebar activeView={activeView} setActiveView={setActiveView} t={t.sidebar} user={user} />
       <main className="flex-1 flex flex-col relative overflow-y-auto">
-        <Header activeView={activeView} t={t.header} />
+        <Header activeView={activeView} t={t.header} user={user} />
         {renderContent()}
       </main>
-      <Insights t={t.insights} />
+      <Insights t={t.insights} user={user} />
     </div>
   );
 }

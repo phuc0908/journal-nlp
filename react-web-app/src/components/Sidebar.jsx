@@ -48,7 +48,7 @@ const Sidebar = ({ activeView, setActiveView, t }) => {
                     <img alt="User Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsnLX2ECEa2hVCHz98BhH5nR5-K4vCjGrXOdHMCQ1Z-Q5K-zj2o49V6_3ol7AZIFfnYd7jSuzujVvQK0bEFrOlNiNnxR1f6cd0aaV0yQ5g7V-1jaBOB8IC8W2F0_mnO6SqAIgGS4lGR8VImiL1cRmEjMa3I8gjeXwGM_DuXFBNd_U0yNLYOOazeBwuzXSTGXDyThFeFvNMiYIy1EZYeTPVXOAkNgNHkeQPqGxdPpX9exmOQHH9edbSudbJQSINpaJ-jTtKSodWnZHo" />
                 </div>
                 <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold truncate">{t.username}</p>
+                    <p className="text-sm font-semibold truncate">{user?.nickname || t.username}</p>
                     <p className="text-xs text-slate-500">{t.userRole}</p>
                 </div>
                 <button

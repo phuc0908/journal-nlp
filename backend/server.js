@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import User from './models/User.js';
+import Journal from './models/Journal.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,6 +20,25 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Auth Middleware
+const auth = async (req, res, next) => {
+    try {
+        const token = req.header('Authorization')?.replace('Bearer ', '');
+        if (!token) throw new Error();
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret_key');
+        const user = await User.findById(decoded.id);
+
+        if (!user) throw new Error();
+
+        req.user = user;
+        req.token = token;
+        next();
+    } catch (e) {
+        res.status(401).json({ message: 'Vui lòng xác thực tài khoản' });
+    }
+};
 
 // Phục vụ file tĩnh từ frontend (folder dist)
 const frontendPath = path.join(__dirname, '../react-web-app/dist');
@@ -51,7 +71,16 @@ async function seedDefaultUser() {
     }
 }
 
-// Routes
+// Routes - Auth
+app.get('/api/auth/me', auth, async (req, res) => {
+    res.json({
+        user: {
+            username: req.user.username,
+            nickname: req.user.nickname
+        }
+    });
+});
+
 app.post('/api/auth/register', async (req, res) => {
     try {
         const { username, nickname, password } = req.body;
@@ -102,6 +131,34 @@ app.post('/api/auth/login', async (req, res) => {
     } catch (error) {
         console.error('❌ Lỗi Đăng nhập:', error);
         res.status(500).json({ message: 'Lỗi server khi đăng nhập', error: error.message });
+    }
+});
+
+// Routes - Journal
+app.post('/api/journals', auth, async (req, res) => {
+    try {
+        const { content, mood, tags } = req.body;
+        const journal = new Journal({
+            user: req.user._id,
+            content,
+            mood,
+            tags
+        });
+        await journal.save();
+        res.status(201).json(journal);
+    } catch (error) {
+        console.error('❌ Lỗi lưu Nhật ký:', error);
+        res.status(500).json({ message: 'Lỗi server khi lưu nhật ký', error: error.message });
+    }
+});
+
+app.get('/api/journals', auth, async (req, res) => {
+    try {
+        const journals = await Journal.find({ user: req.user._id }).sort({ createdAt: -1 });
+        res.json(journals);
+    } catch (error) {
+        console.error('❌ Lỗi lấy Nhật ký:', error);
+        res.status(500).json({ message: 'Lỗi server khi lấy nhật ký', error: error.message });
     }
 });
 

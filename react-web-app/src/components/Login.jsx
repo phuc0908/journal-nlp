@@ -39,6 +39,8 @@ const Login = ({ t, setIsLoggedIn }) => {
             } else {
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('user', JSON.stringify(data.user));
+                localStorage.setItem('token', data.token);
+                if (setUser) setUser(data.user);
                 setIsLoggedIn(true);
             }
         } catch (err) {
