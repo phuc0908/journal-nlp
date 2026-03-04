@@ -1,6 +1,11 @@
 import React from 'react';
 
-const Sidebar = ({ activeView, setActiveView, t, user }) => {
+
+const DAY_LABELS = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+
+const Sidebar = ({ activeView, setActiveView, t, user, weeklyCount = Array(7).fill(0) }) => {
+    const maxCount = Math.max(...weeklyCount, 1);
+
     const navItems = [
         { id: 'journal', label: t.journal, icon: 'edit_note' },
         { id: 'overview', label: t.overview, icon: 'grid_view' },
@@ -32,13 +37,23 @@ const Sidebar = ({ activeView, setActiveView, t, user }) => {
                 <div className="bg-primary/5 rounded-xl p-4">
                     <p className="text-xs text-primary font-bold uppercase tracking-wider mb-2">{t.weekHeader}</p>
                     <div className="flex justify-between items-end h-16 gap-1">
-                        <div className="w-full bg-primary/20 rounded-t-sm h-[40%]" title="Mon"></div>
-                        <div className="w-full bg-primary/20 rounded-t-sm h-[60%]" title="Tue"></div>
-                        <div className="w-full bg-primary/40 rounded-t-sm h-[85%]" title="Wed"></div>
-                        <div className="w-full bg-primary/20 rounded-t-sm h-[30%]" title="Thu"></div>
-                        <div className="w-full bg-primary/60 rounded-t-sm h-[70%]" title="Fri"></div>
-                        <div className="w-full bg-primary rounded-t-sm h-[95%]" title="Sat"></div>
-                        <div className="w-full bg-primary/10 rounded-t-sm h-[10%]" title="Sun"></div>
+                        {weeklyCount.map((count, i) => {
+                            const heightPct = loading ? 10 : Math.max((count / maxCount) * 100, count > 0 ? 8 : 4);
+                            const hasEntry = count > 0;
+                            return (
+                                <div
+                                    key={i}
+                                    className={`w-full rounded-t-sm transition-all ${hasEntry ? 'bg-primary' : 'bg-primary/15'}`}
+                                    style={{ height: `${heightPct}%` }}
+                                    title={`${DAY_LABELS[i]}: ${count} bài`}
+                                />
+                            );
+                        })}
+                    </div>
+                    <div className="flex justify-between mt-1">
+                        {DAY_LABELS.map(d => (
+                            <span key={d} className="text-[9px] text-slate-400 font-bold w-full text-center">{d}</span>
+                        ))}
                     </div>
                     <p className="text-[10px] mt-2 text-slate-500 dark:text-slate-400">{t.insightText}</p>
                 </div>

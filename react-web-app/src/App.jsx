@@ -9,6 +9,7 @@ import Vault from './components/Vault';
 import Settings from './components/Settings';
 import Login from './components/Login';
 import { translations } from './translations';
+import { useJournalStats } from './useJournalStats';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true');
@@ -16,6 +17,7 @@ function App() {
   const [activeView, setActiveView] = useState('journal');
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   const [language, setLanguage] = useState(localStorage.getItem('language') || 'vi');
+  const { streak, weeklyCount } = useJournalStats();
 
   const t = translations[language];
 
@@ -73,12 +75,12 @@ function App() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-background-light dark:bg-background-dark">
-      <Sidebar activeView={activeView} setActiveView={setActiveView} t={t.sidebar} user={user} />
+      <Sidebar activeView={activeView} setActiveView={setActiveView} t={t.sidebar} user={user} weeklyCount={weeklyCount} />
       <main className="flex-1 flex flex-col relative overflow-y-auto">
         <Header activeView={activeView} t={t.header} user={user} />
         {renderContent()}
       </main>
-      <Insights t={t.insights} user={user} />
+      <Insights t={t.insights} user={user} streak={streak} />
     </div>
   );
 }

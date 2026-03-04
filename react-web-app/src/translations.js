@@ -34,7 +34,6 @@ export const translations = {
             addImage: "Thêm ảnh",
             record: "Ghi âm",
             tag: "Gắn thẻ",
-            saveTime: "Đã lưu lúc 20:45",
             finish: "Hoàn tất",
         },
         insights: {
@@ -165,7 +164,6 @@ export const translations = {
             addImage: "Add Photo",
             record: "Record",
             tag: "Tag",
-            saveTime: "Saved at 20:45",
             finish: "Finish",
         },
         insights: {
